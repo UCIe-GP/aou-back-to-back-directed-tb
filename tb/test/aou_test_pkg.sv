@@ -10,7 +10,7 @@ package aou_test_pkg;
     import axi_pkg::*;
     import link_pkg::*;
     import aou_env_pkg::*;
-    
+    `include "v_sequence.sv"
     `include "aou_base_test.sv"
     `include "tc01_csr_reset_test.sv"
     `include "tc02_link_bringup_test.sv"
