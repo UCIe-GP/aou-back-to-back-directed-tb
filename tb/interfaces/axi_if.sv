@@ -97,16 +97,100 @@ interface axi_if #(
   
   // reset the master related signals at the beginning.
   task automatic reset_master();
-    // RESET THE HANDSHAKE SIGNALS.
+    awid    <= '0;
+    awaddr  <= '0;
+    awlen   <= '0;
+    awsize  <= $clog2(DATA_WIDTH/8);
+    awburst <= 2'b01;
+    awvalid <= 1'b0;
+
+    wdata   <= '0;
+    wstrb   <= '0;
+    wlast   <= 1'b0;
+    wvalid  <= 1'b0;
+
+    bready  <= 1'b0;
+
+    arid    <= '0;
+    araddr  <= '0;
+    arlen   <= '0;
+    arsize  <= $clog2(DATA_WIDTH/8);
+    arburst <= 2'b01;
+    arvalid <= 1'b0;
+
+    rready  <= 1'b0;
   endtask
 
-  task automatic write_burst();
-    // TODO
-    // I want to processes, one for the AW Channel, and one for the W Channel
-    // The Task will take the base address, number of beats, and the payload, then it will start executing the AXI logic
-    // for transferring the beats.
-    // after the two tasks finish, it will wait for the response on the B channel.
+  task automatic write_burst(
+    input int txn_id, 
+    input logic [ADDR_WIDTH-1:0] base_addr, 
+    input logic [7:0] burst_len, 
+    input logic [DATA_WIDTH-1:0] payload[$], 
+    output logic [1:0] response
+  );
+    if(!(payload.size() == burst_len + 1)) begin
+      $fatal("[WRITE BURST] Payload size %0d doesn't match number of beats %0d", payload.size(), (burst_len + 1));
+    end
+    fork
+      // AW Channel
+      begin
+        @(posedge clk);
+        $display("[WRITE BURST] AW HANDSHAKE START..");
+        awid <= txn_id;
+        // output awid, awaddr, awlen, awsize, awburst, awvalid,
+        awaddr <= base_addr;
+        awlen <= burst_len;
+        awsize <= $clog2(DATA_WIDTH/8);
+        awburst <= 2'b01;
+        awvalid <= 1;
+
+        do begin
+          @(posedge clk);
+        end while (!(awvalid && awready));
+        $display("[WRITE BURST] AW HANDSHAKE DONE..");
+        awvalid <= 0;
+      end
+
+      // W Channel
+      begin
+        logic [DATA_WIDTH-1:0] beat_data;
+        int i = 0;
+        @(posedge clk);
+        while(payload.size() > 0) begin
+          $display("[WRITE BURST] Writing beat %0d START..", ++i);
+          beat_data = payload.pop_front(); 
+          // output wdata, wstrb, wlast, wvalid,
+          wdata <= beat_data;
+          wstrb <= '1; 
+          wlast <= (payload.size() == 0);
+          wvalid <= 1;
+          do begin
+            @(posedge clk);
+          end while (!(wvalid && wready));
+          $display("[WRITE BURST] Writing beat %0d DONE..", i);
+        end
+        wvalid <= 0;
+        wlast <= 0;
+      end
+    join
     
+    // B Channel
+    $display("[WRITE BURST] Waiting For Burst Write Response..");
+    @(posedge clk);
+    bready <= 1;
+
+    do begin
+      @(posedge clk);
+    end while (!bvalid);
+
+    if(bresp != 0) begin
+      $error("[WRITE BURST] WRITE TRANSACTION FAILED..");
+    end
+
+    $display("[WRITE BURST] Response received..");
+    response = bresp;
+
+    bready <= 0;
   endtask
 
   task automatic read_burst();

@@ -11,8 +11,8 @@ package aou_tb_pkg;
   parameter int AXI_ADDR_WIDTH = 32;
   parameter int AXI_DATA_WIDTH = 64;
   parameter int AXI_ID_WIDTH   = 4;
-  parameter int AXI_STRB_WIDTH = AXI_DATA_WIDTH / 8;
 
+  parameter int AXI_STRB_WIDTH = AXI_DATA_WIDTH / 8;
   // --------------------------------------------------------------------------
   // FDI / UCIe Interface Configuration
   // --------------------------------------------------------------------------
