@@ -1329,25 +1329,25 @@ R1
 n@a@o@u_@s@y@n@c_@f@i@f@o_@r@e@g
 Xaou_tb_pkg
 R2
-Z29 !s110 1791122535
+Z29 !s110 1791145376
 !i10b 1
-!s100 ReWWL[iU3;YmFfQKAFEXb0
-IRhOMWkggzRU>Bgj8M>]ZS2
+!s100 3kBnGo5SR?=@@L@45K3@Q3
+Im[`NQOTVH7LRHK?dgCzU]2
 S1
 R0
-w1791119882
+w1791144986
 8.\tb\packages\aou_tb_pkg.sv
 F.\tb\packages\aou_tb_pkg.sv
-!i122 8
+!i122 16
 L0 5 0
-VRhOMWkggzRU>Bgj8M>]ZS2
+Vm[`NQOTVH7LRHK?dgCzU]2
 R9
 r1
 !s85 0
 31
-Z30 !s108 1791122535.000000
-!s107 .\tb\bfm\dma_engine.sv|.\tb\interfaces\axi_if.sv|.\tb\packages\aou_tb_pkg.sv|
-Z31 !s90 .\tb\packages\aou_tb_pkg.sv|.\tb\interfaces\axi_if.sv|.\tb\bfm\dma_engine.sv|
+Z30 !s108 1791145376.000000
+!s107 .\tb\interfaces\apb_master_if.sv|.\tb\bfm\slave_engine.sv|.\tb\bfm\dma_engine.sv|.\tb\interfaces\axi_if.sv|.\tb\packages\aou_tb_pkg.sv|
+Z31 !s90 .\tb\packages\aou_tb_pkg.sv|.\tb\interfaces\axi_if.sv|.\tb\bfm\dma_engine.sv|.\tb\bfm\slave_engine.sv|.\tb\interfaces\apb_master_if.sv|
 !i113 0
 Z32 o-L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
 R1
@@ -1693,6 +1693,61 @@ R13
 R14
 R1
 n@a@o@u_@u@p_@f@i@f@o
+Yapb_if
+R2
+R2
+Z37 DXx4 work 10 aou_tb_pkg 0 22 m[`NQOTVH7LRHK?dgCzU]2
+DXx4 work 21 apb_master_if_sv_unit 0 22 E;9ZoCFgc?_O3?29^h??j1
+R29
+R8
+r1
+!s85 0
+!i10b 1
+!s100 LnHX]9ldS@NlSe1V85nT82
+IF>nd]eA`T@jDMhRMPP8[H0
+!s105 apb_master_if_sv_unit
+S1
+R0
+Z38 w1791145051
+Z39 8.\tb\interfaces\apb_master_if.sv
+Z40 F.\tb\interfaces\apb_master_if.sv
+!i122 16
+L0 10 0
+R9
+31
+R30
+Z41 !s107 .\tb\interfaces\apb_master_if.sv|.\tb\bfm\slave_engine.sv|.\tb\bfm\dma_engine.sv|.\tb\interfaces\axi_if.sv|.\tb\packages\aou_tb_pkg.sv|
+R31
+!i113 0
+R32
+R1
+Xapb_master_if_sv_unit
+R2
+R2
+R37
+R29
+VE;9ZoCFgc?_O3?29^h??j1
+r1
+!s85 0
+!i10b 1
+!s100 gJHa_LV^7mXdY2MPYe0oB1
+IE;9ZoCFgc?_O3?29^h??j1
+!i103 1
+S1
+R0
+R38
+R39
+R40
+!i122 16
+Z42 L0 8 0
+R9
+31
+R30
+R41
+R31
+!i113 0
+R32
+R1
 vASYNC_APB_BRIDGE
 R2
 R3
@@ -1773,27 +1828,27 @@ R1
 n@a@s@y@n@c_@a@p@b_@b@r@i@d@g@e_@s@i
 Yaxi_if
 R2
-Z37 DXx4 work 10 aou_tb_pkg 0 22 RhOMWkggzRU>Bgj8M>]ZS2
-DXx4 work 14 axi_if_sv_unit 0 22 7C_5mM8>B`c=N>CJ<PEU:1
+R37
+DXx4 work 14 axi_if_sv_unit 0 22 :fk[BV83Q2BAL31ofgAPT2
 R29
 R8
 r1
 !s85 0
 !i10b 1
-!s100 4V]9I3A4mMT3MkAHdlIY92
-Ia@N?DHfTlWzNKM:]S`n0L3
+!s100 >@R[cb6B2J5dkGIVF_YFn3
+I_30KSQL]VQ1F]n>_G_Ok<0
 !s105 axi_if_sv_unit
 S1
 R0
-Z38 w1791122532
-Z39 8.\tb\interfaces\axi_if.sv
-Z40 F.\tb\interfaces\axi_if.sv
-!i122 8
-L0 8 0
+Z43 w1791145174
+Z44 8.\tb\interfaces\axi_if.sv
+Z45 F.\tb\interfaces\axi_if.sv
+!i122 16
+R42
 R9
 31
 R30
-Z41 !s107 .\tb\bfm\dma_engine.sv|.\tb\interfaces\axi_if.sv|.\tb\packages\aou_tb_pkg.sv|
+R41
 R31
 !i113 0
 R32
@@ -1802,20 +1857,20 @@ Xaxi_if_sv_unit
 R2
 R37
 R29
-V7C_5mM8>B`c=N>CJ<PEU:1
+V:fk[BV83Q2BAL31ofgAPT2
 r1
 !s85 0
 !i10b 1
-!s100 l[`4bZ=MNU0:IZEmjdK0h0
-I7C_5mM8>B`c=N>CJ<PEU:1
+!s100 UM0jXH^hbldf:V3SKJBV12
+I:fk[BV83Q2BAL31ofgAPT2
 !i103 1
 S1
 R0
-R38
-R39
-R40
-!i122 8
-Z42 L0 6 0
+R43
+R44
+R45
+!i122 16
+Z46 L0 6 0
 R9
 31
 R30
@@ -1839,10 +1894,10 @@ Ig8g2Q10hkMTKZ6A6m7zZe2
 !s105 dma_engine_sv_unit
 S1
 R0
-Z43 w1791121019
-Z44 8.\tb\bfm\dma_engine.sv
-Z45 F.\tb\bfm\dma_engine.sv
-!i122 8
+Z47 w1791121019
+Z48 8.\tb\bfm\dma_engine.sv
+Z49 F.\tb\bfm\dma_engine.sv
+!i122 16
 L0 7 122
 R9
 31
@@ -1866,11 +1921,11 @@ ID9?g@0ElgDnXi9AoHh?`62
 !i103 1
 S1
 R0
-R43
-R44
-R45
-!i122 8
-R42
+R47
+R48
+R49
+!i122 16
+R46
 R9
 31
 R30
@@ -1903,4 +1958,59 @@ R12
 !i113 0
 R13
 R14
+R1
+vslave
+R2
+R2
+R37
+DXx4 work 20 slave_engine_sv_unit 0 22 JnkB]1C;8WgSIUfbg`H[U2
+R29
+R8
+r1
+!s85 0
+!i10b 1
+!s100 e^SWfb?BUTT4A`9NJdASh1
+IFn[E]3FCC9hA2@Cen=nbF0
+!s105 slave_engine_sv_unit
+S1
+R0
+Z50 w1791145376
+Z51 8.\tb\bfm\slave_engine.sv
+Z52 F.\tb\bfm\slave_engine.sv
+!i122 16
+L0 3 50
+R9
+31
+R30
+R41
+R31
+!i113 0
+R32
+R1
+Xslave_engine_sv_unit
+R2
+R2
+R37
+R29
+VJnkB]1C;8WgSIUfbg`H[U2
+r1
+!s85 0
+!i10b 1
+!s100 DePeZL2kX>@idZDMRM@:F1
+IJnkB]1C;8WgSIUfbg`H[U2
+!i103 1
+S1
+R0
+R50
+R51
+R52
+!i122 16
+L0 1 0
+R9
+31
+R30
+R41
+R31
+!i113 0
+R32
 R1

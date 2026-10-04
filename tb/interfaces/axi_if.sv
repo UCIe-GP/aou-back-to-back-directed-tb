@@ -225,7 +225,7 @@ task automatic resetSlave();
     bvalid<=0;
     arready<=0;
     rid<=0;
-    rresp<0;
+    rresp<=0;
     rlast<=0;
     rvalid<=0;
 endtask

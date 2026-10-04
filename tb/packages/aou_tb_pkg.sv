@@ -5,7 +5,7 @@
 package aou_tb_pkg;
 
   // --------------------------------------------------------------------------
-  // AXI Bus Default Parameters
+  // AXI Bus Parameters
   // --------------------------------------------------------------------------
   parameter int AXI_ADDR_WIDTH = 32;
   parameter int AXI_DATA_WIDTH = 64;
@@ -13,9 +13,15 @@ package aou_tb_pkg;
   parameter int AXI_STRB_WIDTH = AXI_DATA_WIDTH / 8;
 
   // --------------------------------------------------------------------------
+  // APB Bus Parameters
+  // --------------------------------------------------------------------------
+  parameter int APB_ADDR_WIDTH = 32;
+  parameter int APB_DATA_WIDTH = 32;
+
+  // --------------------------------------------------------------------------
   // Protocol & Memory Constraints
   // --------------------------------------------------------------------------
-  parameter int AXI_MAX_BURST_LEN = 256;  // AXI4 maximum beats per burst
+  parameter int AXI_MAX_BURST_LEN   = 256;  // AXI4 maximum beats per burst
   parameter int AXI_PAGE_SIZE_BYTES = 4096; // 4KB boundary constraint
   
   // --------------------------------------------------------------------------

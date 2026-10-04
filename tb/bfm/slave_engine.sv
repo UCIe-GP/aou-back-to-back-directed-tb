@@ -12,43 +12,41 @@ module slave #
     input rst_n,
     axi_if.Slave intf
 );
-//create memory 
-logic [7:0] mymemory[logic[ADDR_WIDTH-1:0]];
-logic [ID_WIDTH-1:0] captured_id;
-logic[Addr-width-1:0] myaddress;
+    //create memory 
+    logic [7:0] mymemory[logic[ADDR_WIDTH-1:0]];
+    logic [ID_WIDTH-1:0] captured_id;
+    logic[ADDR_WIDTH-1:0] myaddress;
 
 
-always@(posedge clk or negedge rst_n)begin 
-  //if reset works
-  if(!rst_n)begin
-    intf.resetSlave();
-end
-    else begin 
-//address ready handshake
-awready<=1;
-wready<=1;
-if(intf.awvalid&&intf.awready)begin
-    captured_id<=intf.awid;
-    myaddress<=intf.awaddr;
-end
-//write 
-if(intf.wvalid&&intf.wready)begin
-    for(int b=0;b<STRB_WIDTH;++b)begin
-        if(intf.wstrb[b]) begin
-        mymemory[myaddress+b]<=intf.wdata[b*8+:8];
+    always@(posedge clk or negedge rst_n) begin 
+        //if reset works
+        if(!rst_n) begin
+            intf.resetSlave();
+        end else begin 
+        //address ready handshake
+        intf.awready<=1;
+        intf.wready<=1;
+        if(intf.awvalid&&intf.awready) begin
+            captured_id<=intf.awid;
+            myaddress<=intf.awaddr;
+        end
+        //write 
+        if(intf.wvalid&&intf.wready) begin
+            for(int b=0;b<STRB_WIDTH;++b) begin
+                if(intf.wstrb[b]) begin
+                    mymemory[myaddress+b]=intf.wdata[b*8+:8];
+                end
+            end
+            myaddress <= myaddress + STRB_WIDTH;
+            if(intf.wlast==1) begin
+                intf.bvalid<=1;
+            end
+        end
+        //response
+        if(intf.bready&&intf.bvalid)begin
+                intf.bresp<=0;
+                intf.bid<=captured_id;
+            end
         end
     end
-    myaddress <= myaddress + STRB_WIDTH;
-
-            if(wlast==1)begin
-            intf.bvalid<=1;
-            end
-    end
-//response
-if(intf.bready&&intf.bvalid)begin
-    bresp<=0;
-    bid<=captured_id;
-end
-    end
-end
 endmodule
