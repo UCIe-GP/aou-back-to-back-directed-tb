@@ -23,6 +23,7 @@ always@(posedge clk or negedge rst_n)begin
   if(!rst_n)begin
     intf.resetSlave();
 end
+    else begin 
 //address ready handshake
 awready<=1;
 wready<=1;
@@ -44,5 +45,6 @@ if(intf.bready&&intf.bvalid)begin
     bresp<=0;
     bid<=captured_id;
 end
+    end
 end
 endmodule
