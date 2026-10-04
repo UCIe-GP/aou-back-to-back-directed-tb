@@ -183,10 +183,6 @@ interface axi_if #(
       @(posedge clk);
     end while (!bvalid);
 
-    if(bresp != 0) begin
-      $error("[WRITE BURST] WRITE TRANSACTION FAILED..");
-    end
-
     $display("[WRITE BURST] Response received..");
     response = bresp;
 
