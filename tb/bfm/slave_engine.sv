@@ -33,12 +33,15 @@ if(intf.awvalid&&intf.awready)begin
 end
 //write 
 if(intf.wvalid&&intf.wready)begin
-    for(int b=0;b<intf.wstr;++b)begin
+    for(int b=0;b<STRB_WIDTH;++b)begin
+        if(intf.wstrb[b]) begin
         mymemory[myaddress+b]<=intf.wdata[b*8+:8];
-        if(wlast==1)begin
+        end
+            if(wlast==1)begin
             intf.bvalid<=1;
         end
     end
+    myaddress <= myaddress + STRB_WIDTH;
 end
 //response
 if(intf.bready&&intf.bvalid)begin
