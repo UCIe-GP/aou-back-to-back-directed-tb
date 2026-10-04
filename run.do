@@ -1,10 +1,10 @@
 vlib work
 
-set env(AOU_CORE_HOME) "."
+set ::env(AOU_CORE_HOME) "."
 
 vlog -sv -f RTL/filelist.f
-
-vsim -c work.AOU_TOP
+vlog -sv -f tb/filelist.f
+vsim -voptargs=+acc -c work.tb_top
 
 run -all
-exit
+examine -radix hex /tb_top/u_slave/mymemory

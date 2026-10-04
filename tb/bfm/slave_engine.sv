@@ -16,37 +16,53 @@ module slave #
     logic [7:0] mymemory[logic[ADDR_WIDTH-1:0]];
     logic [ID_WIDTH-1:0] captured_id;
     logic[ADDR_WIDTH-1:0] myaddress;
-
+    logic aw_received;
 
     always@(posedge clk or negedge rst_n) begin 
         //if reset works
         if(!rst_n) begin
             intf.resetSlave();
+            myaddress <= 0;
+            captured_id <= 0;
+            aw_received <= 0;
         end else begin 
         //address ready handshake
-        intf.awready<=1;
-        intf.wready<=1;
-        if(intf.awvalid&&intf.awready) begin
-            captured_id<=intf.awid;
-            myaddress<=intf.awaddr;
+        if(!aw_received) begin
+            intf.awready<=1;
+            if(intf.awvalid&&intf.awready) begin
+                captured_id<=intf.awid;
+                myaddress<=intf.awaddr;
+                intf.awready <= 0;
+                aw_received <= 1;
+                $display("[MEMORY SLAVE] START ADDRESS OF THE BURST %0d IS RECEIVED SUCCESSFULLY. ADDRESS:%0h", intf.awid, intf.awaddr);
+            end
         end
         //write 
+        intf.wready<=1;
         if(intf.wvalid&&intf.wready) begin
+            logic [ADDR_WIDTH-1:0] current_addr;
+            current_addr = aw_received? myaddress : intf.awaddr;
+            $display("[MEMORY SLAVE] WRITING DATA BEAT STARTING FROM MEMORY ADDRESS:%0h", current_addr);
             for(int b=0;b<STRB_WIDTH;++b) begin
                 if(intf.wstrb[b]) begin
-                    mymemory[myaddress+b]=intf.wdata[b*8+:8];
-                end
+                    mymemory[current_addr+b]=intf.wdata[b*8+:8];
+                end     
             end
-            myaddress <= myaddress + STRB_WIDTH;
+            myaddress <= current_addr + STRB_WIDTH;
+            $display("[MEMORY SLAVE] WRITING DATA BEAT FINISHED AT ADDRESS:%0h", current_addr + STRB_WIDTH);
             if(intf.wlast==1) begin
+                intf.bresp <= 2'b00;
+                intf.bid<= aw_received ? captured_id : intf.awid;
                 intf.bvalid<=1;
+                aw_received <= 0;
+                $display("[MEMORY SLAVE] LAST BEAT WAS RECEIVED SUCCESSFULLY..");
             end
         end
         //response
         if(intf.bready&&intf.bvalid)begin
-                intf.bresp<=0;
-                intf.bid<=captured_id;
+                $display("[MEMORY SLAVE] RESPONSE WRITTEN SUCCESSFULLY.");
+                intf.bvalid<=0;
             end
         end
     end
-endmodule
+endmodule 

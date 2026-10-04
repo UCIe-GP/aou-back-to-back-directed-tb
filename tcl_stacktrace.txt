@@ -1,0 +1,16 @@
+Mon Oct 05 00:25:08 +0300 2026
+Trace back: expected integer but got "0x-2147483019"
+    while executing
+"format %d $tmpAddr"
+    (procedure "Memtool::GetAssociativeLineNo" line 7)
+    invoked from within
+"Memtool::GetAssociativeLineNo  $memName $vsimMem(topFirstAddr:$dpane:$memName)"
+    (procedure "Memdata::GenerateMemData" line 155)
+    invoked from within
+"Memdata::GenerateMemData $memdatawin $dpane  [Memview::GetCurrentMemory $memdatawin]"
+    (procedure "Memtool::MoveNupdate" line 88)
+    invoked from within
+"Memtool::MoveNupdate .main_pane.memdata.interior.cs.body .main_pane.memdata.interior.cs.body.datapane.dpane2.tframe2 scroll 0 units"
+    ("after" script)
+  <2:D:/QuestaSim/win64/tk8.6/bgerror.tcl:106: ::tkerror {expected integer but got "0x-2147483019"}
+  <1:eval:1: ::tk::dialog::error::bgerror {expected integer but got "0x-2147483019"}
