@@ -90,7 +90,8 @@ interface axi_if #(
     input  arid, araddr, arlen, arsize, arburst, arvalid,
     output arready,
     output rid, rdata, rresp, rlast, rvalid,
-    input  rready
+    input  rready,
+    import task resetSlave()
   );
 
   modport Monitor (
@@ -214,5 +215,20 @@ interface axi_if #(
     // TODO
     // TBD
   endtask 
+
+//SLAVE TASKS
+task automatic resetSlave();
+   awready<=0;
+    wready<=0;
+    bid<=0;
+    bresp<=0;
+    bvalid<=0;
+    arready<=0;
+    rid<=0;
+    rresp<0;
+    rlast<=0;
+    rvalid<=0;
+endtask
+
 
 endinterface
