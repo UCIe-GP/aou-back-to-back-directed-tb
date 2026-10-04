@@ -243,8 +243,8 @@ interface axi_if #(
       if(i != burst_len && rlast != 1'b0) begin
          $error("[READ BURST] RLAST error on beat %0d", i);
       end
-      else if(rlast != 1'b1) begin
-        $error("[READ BURST] RLAST error on the last beat %0d");
+      if(i == burst_len && rlast != 1'b1) begin
+        $error("[READ BURST] RLAST error on the last beat");
       end
     end
     rready <= 0;
