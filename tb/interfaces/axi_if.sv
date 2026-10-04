@@ -66,8 +66,18 @@ interface axi_if #(
     output arid, araddr, arlen, arsize, arburst, arvalid,
     input  arready,
     input  rid, rdata, rresp, rlast, rvalid,
-    output rready
-    import task reset_master, write_single, write_burst, read_single, read_burst;
+    output rready,
+    import task write_burst(
+      input int txn_id, 
+      input logic [ADDR_WIDTH-1:0] base_addr, 
+      input logic [7:0] burst_len, 
+      input logic [DATA_WIDTH-1:0] payload[$], 
+      output logic [1:0] response
+    ),
+    import task reset_master(),
+    import task write_single(),
+    import task read_single(),
+    import task read_burst()
   );
 
   modport Slave (
