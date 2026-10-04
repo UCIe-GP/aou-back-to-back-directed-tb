@@ -37,12 +37,13 @@ if(intf.wvalid&&intf.wready)begin
         if(intf.wstrb[b]) begin
         mymemory[myaddress+b]<=intf.wdata[b*8+:8];
         end
-            if(wlast==1)begin
-            intf.bvalid<=1;
-        end
     end
     myaddress <= myaddress + STRB_WIDTH;
-end
+
+            if(wlast==1)begin
+            intf.bvalid<=1;
+            end
+    end
 //response
 if(intf.bready&&intf.bvalid)begin
     bresp<=0;
