@@ -225,7 +225,7 @@ interface axi_if #(
     
     //R Phase 
     payload.delete();
-    response <= 2'b00; //OKAY AS DEFAULT 
+    response = 2'b00; //OKAY AS DEFAULT 
     for (int i = 0; i < burst_len + 1; i++) begin
       do begin
           @(posedge clk);
