@@ -5,6 +5,7 @@
 `ifndef APB_IF_SV
 `define APB_IF_SV
 
+`timescale 1ns/1ps
 import aou_tb_pkg::*;
 
 interface apb_if #(

@@ -1,87 +1,87 @@
-// ============================================================================
-// File: tb/tb_top.sv
-// Description: Top-level testbench connecting DMA Engine directly to Slave.
-// ============================================================================
 `timescale 1ns/1ps
 
 import aou_tb_pkg::*;
+`include "dut_wrapper.svh"
 
 module tb_top;
 
-  // --------------------------------------------------------------------------
-  // Clock & Reset Signals
-  // --------------------------------------------------------------------------
-  logic clk;
-  logic rst_n;
+    logic clk, pclk;
+    logic rst_n;
 
-  // Clock Generation (10ns period)
-  initial begin
-    clk = 1'b0;
-    forever #5ns clk = ~clk;
-  end
+    initial begin
+        clk = 1'b0;
+        forever #5ns clk = ~clk;
+    end
 
-  // Reset Sequence
-  initial begin
-    rst_n = 1'b0;
-    #25ns;
-    rst_n = 1'b1;
-  end
+    initial begin
+        pclk = 1'b0;
+        forever #50ns pclk = ~pclk;
+    end
 
-  // --------------------------------------------------------------------------
-  // Interface Instance
-  // --------------------------------------------------------------------------
-  axi_if #(
-      .ADDR_WIDTH(AXI_ADDR_WIDTH),
-      .DATA_WIDTH(AXI_DATA_WIDTH),
-      .ID_WIDTH  (AXI_ID_WIDTH),
-      .STRB_WIDTH(AXI_STRB_WIDTH)
-  ) axi_bus (
-      .clk  (clk),
-      .rst_n(rst_n)
-  );
+    logic presetn;
+    assign presetn = rst_n;
 
-  // --------------------------------------------------------------------------
-  // Module Instantiations
-  // --------------------------------------------------------------------------
-  // DMA Engine (AXI Master)
-  dma_engine #(
-      .ADDR_WIDTH   (AXI_ADDR_WIDTH),
-      .DATA_WIDTH   (AXI_DATA_WIDTH),
-      .ID_WIDTH     (AXI_ID_WIDTH),
-      .STRB_WIDTH   (AXI_STRB_WIDTH),
-      .MAX_BURST_LEN(AXI_MAX_BURST_LEN),
-      .PAGE_SIZE    (AXI_PAGE_SIZE_BYTES)
-  ) u_dma_engine (
-      .clk  (clk),
-      .rst_n(rst_n),
-      .intf (axi_bus.Master)
-  );
+    apb_if dut1_apb_if (.pclk(pclk), .presetn(presetn));
+    apb_if dut2_apb_if (.pclk(pclk), .presetn(presetn));
 
-  // Slave Memory Model
-  slave #(
-      .ADDR_WIDTH   (AXI_ADDR_WIDTH),
-      .DATA_WIDTH   (AXI_DATA_WIDTH),
-      .ID_WIDTH     (AXI_ID_WIDTH),
-      .STRB_WIDTH   (AXI_STRB_WIDTH),
-      .MAX_BURST_LEN(AXI_MAX_BURST_LEN),
-      .PAGE_SIZE    (AXI_PAGE_SIZE_BYTES)
-  ) u_slave (
-      .clk  (clk),
-      .rst_n(rst_n),
-      .intf (axi_bus.Slave)
-  );
+    axi_M_if #(
+      .ADDR_WIDTH(64),
+      .DATA_WIDTH(256), 
+      .ID_WIDTH(10),
+      .STRB_WIDTH(32)
+    ) axi_if_master (.clk(clk), .rst_n(rst_n));
 
-  // --------------------------------------------------------------------------
-  // Waveform Dump & Simulation Timeout Guard
-  // --------------------------------------------------------------------------
-  initial begin
-    $dumpfile("tb_top.vcd");
-    $dumpvars(0, tb_top);
+    axi_S_if #(
+      .ADDR_WIDTH(64),
+      .DATA_WIDTH(512), 
+      .ID_WIDTH(10),
+      .STRB_WIDTH(64)
+    ) axi_if_slave  (.clk(clk), .rst_n(rst_n));
 
-    // Timeout guard to prevent infinite loops during debugging
-    #10000ns;
-    $display("[TB TOP] Simulation watchdog timeout reached.");
-    $finish;
-  end
+    dut_wrapper u_dut_wrapper (
+        .clk          (clk),
+        .rst_n        (rst_n),
+        .pclk         (pclk),
+        .presetn      (presetn),
+        .dut1_apb_if  (dut1_apb_if),
+        .dut2_apb_if  (dut2_apb_if),
+        .axi_if_master(axi_if_master),
+        .axi_if_slave (axi_if_slave)
+    );
+
+    initial begin
+       $display("[TB TOP] Asserting Reset...");
+        rst_n = 0;
+        
+        @(posedge pclk);
+        dut1_apb_if.reset_master();
+        dut2_apb_if.reset_master();
+        
+        #500ns;
+        rst_n = 1;
+        $display("[TB TOP] Reset Released.");
+        
+        repeat(20) @(posedge pclk);
+
+        $display("[TB TOP] Starting APB Configuration...");
+        
+        dut1_apb_if.apb_write(32'h4, 32'h1, apb_slverr); 
+        dut1_apb_if.apb_write(32'h8, 32'h1, apb_slverr);
+        dut2_apb_if.apb_write(32'h8, 32'h1, apb_slverr);
+        $display("[TB TOP] APB Configuration Complete.");
+        repeat(50) @(posedge pclk);
+    end
+
+    // --------------------------------------------------------------------------
+    // Waveform Dump & Simulation Timeout Guard
+    // --------------------------------------------------------------------------
+    initial begin
+        // $dumpfile("tb_top.vcd");
+        // $dumpvars(0, tb_top);
+
+        #10000ns;
+        $display("[TB TOP] Simulation watchdog timeout reached.");
+        $finish;
+    end
 
 endmodule
