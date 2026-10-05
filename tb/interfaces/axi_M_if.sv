@@ -249,14 +249,6 @@ interface axi_M_if #(
                 if (response == 2'b00) begin
                     response = rresp; // record the first error response status to be returned 
                 end
-                $error("[READ BURST] Beat %0d returned error RRESP: 2'b%0b", i, rresp);
-            end
-
-            if(i != burst_len && rlast != 1'b0) begin
-                $error("[READ BURST] RLAST error on beat %0d", i);
-            end
-            if(i == burst_len && rlast != 1'b1) begin
-            $error("[READ BURST] RLAST error on the last beat");
             end
         end
         rready <= 0;

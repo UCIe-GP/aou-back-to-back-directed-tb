@@ -50,6 +50,12 @@ module tb_top;
     );
 
     initial begin
+        logic apb_slverr;
+        logic [255:0] write_q[$];
+        logic [255:0] read_q[$];
+        logic [1:0]   resp;
+        bit           is_match;
+
        $display("[TB TOP] Asserting Reset...");
         rst_n = 0;
         
@@ -70,6 +76,11 @@ module tb_top;
         dut2_apb_if.apb_write(32'h8, 32'h1, apb_slverr);
         $display("[TB TOP] APB Configuration Complete.");
         repeat(50) @(posedge pclk);
+
+        u_dut_wrapper.u_dma_engine.load_image("image.hex");
+        u_dut_wrapper.u_dma_engine.transfer_image('0);
+
+
     end
 
     // --------------------------------------------------------------------------
@@ -78,7 +89,9 @@ module tb_top;
     initial begin
         // $dumpfile("tb_top.vcd");
         // $dumpvars(0, tb_top);
+    end
 
+    initial begin
         #10000ns;
         $display("[TB TOP] Simulation watchdog timeout reached.");
         $finish;

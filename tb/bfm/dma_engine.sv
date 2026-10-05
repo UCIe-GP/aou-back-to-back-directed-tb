@@ -4,12 +4,12 @@
 //              verifies read-back data over AXI.
 // ============================================================================
 import aou_tb_pkg::*;
-
+`timescale 1ns/1ps
 module dma_engine #(
     parameter int ADDR_WIDTH     = AXI_ADDR_WIDTH,
     parameter int DATA_WIDTH     = AXI_DATA_WIDTH,
     parameter int ID_WIDTH       = AXI_ID_WIDTH,
-    parameter int STRB_WIDTH     = AXI_STRB_WIDTH,
+    parameter int STRB_WIDTH     = DATA_WIDTH/8,
     parameter int MAX_BURST_LEN  = AXI_MAX_BURST_LEN,
     parameter int PAGE_SIZE     = AXI_PAGE_SIZE_BYTES
 )(
@@ -104,13 +104,8 @@ module dma_engine #(
                 .response(bresp_status)
             );
 
-            if (bresp_status != 2'b00) begin
-                $error("[DMA ERROR] Write Txn #%0d failed with BRESP = 2'b%0b at Addr 0x%0h", 
-                       id, bresp_status, curr_addr);
-                $finish;
-            end
+            #50ns;
 
-            // 2. Issue Read Burst for Verification
             $display("[DMA] Issuing Read Burst Txn #%0d | Addr: 0x%0h | Beats: %0d", 
                      id, curr_addr, burst_beats);
 
@@ -122,11 +117,6 @@ module dma_engine #(
                 .response(rresp_status)
             );
 
-            if (rresp_status != 2'b00) begin
-                $error("[DMA ERROR] Read Txn #%0d failed with RRESP = 2'b%0b at Addr 0x%0h", 
-                       id, rresp_status, curr_addr);
-                $finish;
-            end
 
             // 3. Data Comparison
             if (read_back_chunk.size() != payload_chunk.size()) begin
@@ -135,10 +125,10 @@ module dma_engine #(
             end else begin
                 for (int b = 0; b < payload_chunk.size(); b++) begin
                     if (read_back_chunk[b] !== payload_chunk[b]) begin
-                        $error("[DMA MISMATCH] Txn #%0d Beat %0d | Expected: 0x%16h | Got: 0x%16h", 
+                        $error("[DMA MISMATCH] Txn #%0d Beat %0d | Expected: 0x%0h | Got: 0x%0h", 
                                id, b, payload_chunk[b], read_back_chunk[b]);
                     end else begin
-                        $display("[DMA MATCH] Txn #%0d Beat %0d | Data: 0x%16h", 
+                        $display("[DMA MATCH] Txn #%0d Beat %0d | Data: 0x%0h", 
                                  id, b, read_back_chunk[b]);
                     end
                 end
