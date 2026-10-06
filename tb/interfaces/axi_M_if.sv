@@ -212,46 +212,46 @@ interface axi_M_if #(
         bready <= 0;
     endtask
 
-    task automatic read_burst(
-        input int txn_id, 
-        input logic [ADDR_WIDTH-1:0] base_addr, 
-        input logic [7:0] burst_len,
+   task automatic read_burst(
+        input  int txn_id, 
+        input  logic [ADDR_WIDTH-1:0] base_addr, 
+        input  logic [7:0] burst_len,
         output logic [DATA_WIDTH-1:0] payload[$], 
         output logic [1:0] response 
-        );
-        //AR Phase
+    );
+        // 1. AR Phase
         @(posedge clk);
-        arid <= txn_id;
-        araddr <= base_addr;
-        arlen <= burst_len;
-        arsize <= $clog2(DATA_WIDTH/8);
+        arid    <= txn_id;
+        araddr  <= base_addr;
+        arlen   <= burst_len;
+        arsize  <= $clog2(DATA_WIDTH/8);
         arburst <= 2'b01;
         arvalid <= 1'b1;
-        rready <= 1'b1;
 
         do begin
             @(posedge clk);
-            end while (!(arvalid && arready));
-        $display("[READ BURST] AR HANDSHAKE DONE..");
-        arvalid <= 0;
+        end while (!(arvalid && arready));
 
-        //R Phase 
+        arvalid <= 1'b0;
+
+        // 2. R Phase
         payload.delete();
-        response = 2'b00; //OKAY AS DEFAULT 
+        response = 2'b00;
+        rready  <= 1'b1;
+
         for (int i = 0; i < burst_len + 1; i++) begin
             do begin
                 @(posedge clk);
             end while (!(rvalid && rready));
-            
-            payload.push_back(rdata); //push only if it's valid data
 
-            if (rresp != 2'b00) begin
-                if (response == 2'b00) begin
-                    response = rresp; // record the first error response status to be returned 
-                end
+            payload.push_back(rdata);
+
+            if (rresp != 2'b00 && response == 2'b00) begin
+                response = rresp;
             end
         end
-        rready <= 0;
+
+        rready <= 1'b0;
     endtask
 
 

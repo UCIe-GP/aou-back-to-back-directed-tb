@@ -20,7 +20,7 @@ module tb_top;
 
     logic presetn;
     assign presetn = rst_n;
-
+    logic apb_slverr;
     apb_if dut1_apb_if (.pclk(pclk), .presetn(presetn));
     apb_if dut2_apb_if (.pclk(pclk), .presetn(presetn));
 
